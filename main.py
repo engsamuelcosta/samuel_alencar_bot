@@ -25,11 +25,16 @@ def execute(agent: str, text: str) -> str:
 def normalize_response(response: str) -> str:
     content = (response or "").strip()
 
-    if "connect.challenge" in content or "'type': 'event'" in content or '"event":"connect.challenge"' in content:
+    if (
+        "CONNECT_CHALLENGE" in content
+        or "connect.challenge" in content
+        or "'type': 'event'" in content
+        or '"event":"connect.challenge"' in content
+    ):
         return (
             "Ainda não consegui autenticar a conexão com o OpenClaw local. "
-            "Mas já recebi sua solicitação. Se você quiser, eu continuo por aqui "
-            "em português do Brasil e te entrego análise, plano e próximos passos agora."
+            "Mas já recebi sua solicitação e vou seguir em português do Brasil. "
+            "Me diga o tema que eu te entrego agora: análise, plano, execução e próximo passo."
         )
 
     return content or "Não consegui gerar uma resposta agora."
