@@ -7,12 +7,12 @@ def _section(title: str, content: str) -> str:
 
 
 def run(task: str) -> str:
-    # Manager centraliza e delega sempre para a equipe.
+    # Gerente centraliza e delega sempre para a equipe.
     dev_result = developer.run(task)
     qa_result = qa.run(task)
     devops_result = devops.run(task)
 
-    report = "Manager: delegação concluída com retorno da equipe.\n"
+    report = "Gerente: delegação concluída com retorno da equipe.\n"
     report += f"Provedores IA: {provider_status()}\n"
     report += _section("Developer", dev_result)
     report += _section("QA", qa_result)
