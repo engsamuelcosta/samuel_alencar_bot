@@ -1,6 +1,6 @@
 import google.generativeai as genai
 import os
-
+from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
 
@@ -13,7 +13,8 @@ from services.text_to_speech import speak
 from services.team_logger import setup_logging, log_team
 
 
-fload_dotenv()
+load_dotenv() 
+
 genai.configure(api_key=os.getenv("GOOGLE_GENAI_API_KEY"))
 
 model = genai.GenerativeModel('gemini-1.5-flash')
