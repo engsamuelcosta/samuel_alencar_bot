@@ -5,6 +5,7 @@ def run(task: str) -> str:
     command = f"""
 Entre no projeto em C:/dev/grupo-vsa.
 Analise o código e trabalhe em apenas UMA feature por vez.
+Regra obrigatória: responda SEMPRE em português do Brasil (pt-BR), sem inglês.
 Responda em português com:
 - análise técnica
 - plano de implementação

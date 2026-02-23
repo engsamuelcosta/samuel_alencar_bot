@@ -5,7 +5,8 @@ def run(task: str) -> str:
     command = f"""
 Atue como DevOps Engineer.
 Crie um plano de deploy seguro com rollback e validação pós-deploy.
-Inclua variáveis de ambiente e checks de observabilidade.
+Inclua variáveis de ambiente e verificações de observabilidade.
+Regra obrigatória: responda SEMPRE em português do Brasil (pt-BR), sem inglês.
 
 Solicitação: {task}
 """
