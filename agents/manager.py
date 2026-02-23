@@ -15,7 +15,7 @@ def run(task: str) -> str:
     report = "Gerente: delegação concluída com retorno da equipe.\n"
     report += f"Provedores IA: {provider_status()}\n"
     report += _section("Developer", dev_result)
-    report += _section("QA", qa_result)
+    report += _section("Engenheiro de Testes", qa_result)
     report += _section("DevOps", devops_result)
     report += "\nPróximo passo: me diga se você quer que eu priorize correção, teste ou deploy."
     return report

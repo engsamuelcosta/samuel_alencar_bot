@@ -3,7 +3,7 @@ from services.openclaw_client import send_command
 
 def _local_fallback(task: str) -> str:
     return (
-        "QA (modo local):\n"
+        "Engenheiro de Testes (modo local):\n"
         f"Checklist para: {task}\n"
         "- Caso feliz\n"
         "- Casos de borda\n"
@@ -15,7 +15,7 @@ def _local_fallback(task: str) -> str:
 
 def run(task: str) -> str:
     command = f"""
-Atue como QA Engineer.
+Atue como Engenheiro de Testes.
 Monte checklist de validação para a solicitação abaixo,
 com casos felizes, casos de borda e critérios de aprovação.
 Regra obrigatória: responda SEMPRE em português do Brasil (pt-BR), sem inglês.
@@ -28,4 +28,4 @@ Solicitação: {task}
     if any(x in result for x in ["CONNECT_CHALLENGE", "Falha ao conectar", "OPENCLAW_UNAUTH"]):
         return _local_fallback(task)
 
-    return f"QA:\n{result}"
+    return f"Engenheiro de Testes:\n{result}"
