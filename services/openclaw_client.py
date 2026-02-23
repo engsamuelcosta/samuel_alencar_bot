@@ -12,7 +12,7 @@ def _safe_parse(payload: str) -> str:
         if isinstance(data, dict):
             event = data.get("event")
             if event == "connect.challenge":
-                return "CONNECT_CHALLENGE"
+                return "OPENCLAW_UNAUTH"
             return str(data.get("result") or data.get("message") or data)
         return str(data)
     except Exception:
