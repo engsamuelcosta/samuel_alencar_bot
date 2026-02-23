@@ -25,16 +25,38 @@ def run(task: str) -> str:
     devops_result = devops.run(task)
     log_team("DevOps", "retorno recebido")
 
+    dev_local = "modo local" in dev_result.lower()
+    qa_local = "modo local" in qa_result.lower()
+    devops_local = "modo local" in devops_result.lower()
+
     controles = [
-        build_control_item(task, "Developer", "Concluído", 24, "Análise/execução técnica retornada"),
-        build_control_item(task, "Engenheiro de Testes", "Concluído", 24, "Checklist e validação retornados"),
-        build_control_item(task, "DevOps", "Concluído", 24, "Plano de deploy/infra retornado"),
+        build_control_item(
+            task,
+            "Developer",
+            "Bloqueado" if dev_local else "Concluído",
+            24,
+            "Sem execução real (OpenClaw indisponível)" if dev_local else "Análise/execução técnica retornada",
+        ),
+        build_control_item(
+            task,
+            "Engenheiro de Testes",
+            "Bloqueado" if qa_local else "Concluído",
+            24,
+            "Teste não executado (OpenClaw indisponível)" if qa_local else "Checklist e validação retornados",
+        ),
+        build_control_item(
+            task,
+            "DevOps",
+            "Bloqueado" if devops_local else "Concluído",
+            24,
+            "Deploy bloqueado (OpenClaw indisponível)" if devops_local else "Plano de deploy/infra retornado",
+        ),
     ]
 
     feito = (
-        "1) Delegação para Developer concluída.\n"
-        "2) Delegação para Engenheiro de Testes concluída.\n"
-        "3) Delegação para DevOps concluída."
+        "1) Delegação para Developer executada.\n"
+        "2) Delegação para Engenheiro de Testes executada.\n"
+        "3) Delegação para DevOps executada."
     )
 
     report = "Gerente: delegação concluída com retorno da equipe.\n"
@@ -43,6 +65,13 @@ def run(task: str) -> str:
     report += _section("Developer", dev_result)
     report += _section("Engenheiro de Testes", qa_result)
     report += _section("DevOps", devops_result)
+
+    if dev_local or qa_local or devops_local:
+        report += (
+            "\n[ALERTA]\n"
+            "Integração com OpenClaw local falhou (connect.challenge / autenticação). "
+            "Os resultados acima em 'modo local' NÃO representam execução real.\n"
+        )
 
     normalized_task = (task or "").lower()
     if any(k in normalized_task for k in ["monitor", "saúde", "saude", "cron", "zabbix"]):

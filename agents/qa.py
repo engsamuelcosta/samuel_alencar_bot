@@ -3,13 +3,10 @@ from services.openclaw_client import send_command
 
 def _local_fallback(task: str) -> str:
     return (
-        "Engenheiro de Testes (modo local):\n"
-        f"Checklist para: {task}\n"
-        "- Caso feliz\n"
-        "- Casos de borda\n"
-        "- Validação de erros\n"
-        "- Critério de aprovação\n"
-        "Se quiser, eu detalho cada item agora."
+        "Engenheiro de Testes (modo local - sem execução real):\n"
+        f"Solicitação: {task}\n"
+        "Resultado dos testes: NÃO EXECUTADO — falha de conexão/autenticação com OpenClaw local.\n"
+        "Veredicto: REPROVADO (não há evidência de execução)."
     )
 
 

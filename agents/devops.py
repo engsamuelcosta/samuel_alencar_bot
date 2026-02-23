@@ -3,13 +3,10 @@ from services.openclaw_client import send_command
 
 def _local_fallback(task: str) -> str:
     return (
-        "DevOps (modo local):\n"
-        f"Plano para: {task}\n"
-        "1) preparar variáveis de ambiente\n"
-        "2) gerar build\n"
-        "3) deploy controlado\n"
-        "4) validação pós-deploy\n"
-        "5) rollback pronto\n"
+        "DevOps (modo local - sem execução real):\n"
+        f"Solicitação: {task}\n"
+        "Resultado: NÃO EXECUTADO — falha de conexão/autenticação com OpenClaw local.\n"
+        "Deploy: BLOQUEADO até restabelecer integração.\n"
     )
 
 

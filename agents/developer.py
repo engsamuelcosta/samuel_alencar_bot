@@ -3,10 +3,10 @@ from services.openclaw_client import send_command
 
 def _local_fallback(task: str) -> str:
     return (
-        "Developer (modo local):\n"
-        f"Análise técnica inicial da tarefa: {task}\n"
-        "Plano: 1) mapear arquivos impactados; 2) aplicar alteração mínima; 3) validar com teste local.\n"
-        "Execução proposta: posso te entregar agora um passo a passo com comandos e checklist."
+        "Developer (modo local - sem execução real):\n"
+        f"Solicitação: {task}\n"
+        "Resultado: NÃO EXECUTADO — falha de conexão/autenticação com OpenClaw local.\n"
+        "Ação necessária: corrigir integração com OpenClaw antes de reportar como concluído."
     )
 
 
