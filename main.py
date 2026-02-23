@@ -58,25 +58,39 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
-        voice = await update.message.voice.get_file()
-        await voice.download_to_drive("audio.ogg")
+        # 1. Baixa o arquivo de voz do Telegram
+        voice_file = await update.message.voice.get_file()
+        local_audio_input = "audio.ogg"
+        await voice_file.download_to_drive(local_audio_input)
 
-        text = transcribe("audio.ogg")
-        agent = route_agent(text)
+        # 2. Transcreve o áudio (usando sua nova função Gemini)
+        text = transcribe(local_audio_input)
         
+        # 3. Roteamento e Log
+        agent = route_agent(text)
         log_team("Sistema", "áudio transcrito", f"roteado_para={agent}")
         
+        # 4. Execução da lógica e normalização da resposta
         raw_response = execute(agent, text)
         response = normalize_response(raw_response)
         
-        log_team("Sistema", "resposta de voz gerada", f"agente={agent}")
+        log_team("Sistema", "resposta gerada para voz", f"agente={agent}")
 
-        audio_path = speak(response)
-        await update.message.reply_voice(audio_path)
+        # 5. Gera a voz de resposta (usando gTTS grátis)
+        audio_output_path = speak(response)
+
+        # 6. Envio do áudio de volta ao usuário
+        if audio_output_path and os.path.exists(audio_output_path):
+            with open(audio_output_path, "rb") as audio_file:
+                await update.message.reply_voice(voice=audio_file, caption="Aqui está minha resposta:")
+        else:
+            # Fallback caso a geração do áudio falhe
+            await update.message.reply_text(response)
+
     except Exception as e:
-        log_team("Sistema", "Erro voz", str(e))
-        await update.message.reply_text("Houve um erro ao processar seu áudio.")
-
+        log_team("Sistema", "Erro crítico no handle_voice", str(e))
+        print(f"Erro detalhado: {e}")
+        await update.message.reply_text("Desculpe, tive um problema ao processar sua mensagem de voz.")
 def main() -> None:
     setup_logging()
 
