@@ -7,6 +7,7 @@ from router import route_agent
 from agents import manager, developer, qa, devops
 from services.speech_to_text import transcribe
 from services.text_to_speech import speak
+from services.team_logger import setup_logging, log_team
 
 
 def execute(agent: str, text: str) -> str:
@@ -48,7 +49,9 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     agent = route_agent(text)
+    log_team("Sistema", "mensagem recebida", f"roteado_para={agent}")
     response = normalize_response(execute(agent, text))
+    log_team("Sistema", "resposta gerada", f"agente={agent}")
 
     await update.message.reply_text(response)
 
@@ -59,13 +62,17 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     text = transcribe("audio.ogg")
     agent = route_agent(text)
+    log_team("Sistema", "áudio transcrito", f"roteado_para={agent}")
     response = normalize_response(execute(agent, text))
+    log_team("Sistema", "resposta de voz gerada", f"agente={agent}")
 
     audio = speak(response)
     await update.message.reply_voice(audio)
 
 
 def main() -> None:
+    setup_logging()
+
     if not TELEGRAM_TOKEN:
         raise RuntimeError("TELEGRAM_TOKEN não configurado no .env")
 
