@@ -22,6 +22,19 @@ def execute(agent: str, text: str) -> str:
     return manager.run(text)
 
 
+def normalize_response(response: str) -> str:
+    content = (response or "").strip()
+
+    if "connect.challenge" in content or "'type': 'event'" in content or '"event":"connect.challenge"' in content:
+        return (
+            "Ainda não consegui autenticar a conexão com o OpenClaw local. "
+            "Mas já recebi sua solicitação. Se você quiser, eu continuo por aqui "
+            "em português do Brasil e te entrego análise, plano e próximos passos agora."
+        )
+
+    return content or "Não consegui gerar uma resposta agora."
+
+
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (update.message.text or "").strip()
 
@@ -30,7 +43,7 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     agent = route_agent(text)
-    response = execute(agent, text)
+    response = normalize_response(execute(agent, text))
 
     await update.message.reply_text(response)
 
@@ -41,7 +54,7 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     text = transcribe("audio.ogg")
     agent = route_agent(text)
-    response = execute(agent, text)
+    response = normalize_response(execute(agent, text))
 
     audio = speak(response)
     await update.message.reply_voice(audio)

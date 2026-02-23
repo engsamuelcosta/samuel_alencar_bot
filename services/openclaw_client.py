@@ -10,6 +10,9 @@ def _safe_parse(payload: str) -> str:
     try:
         data: Any = json.loads(payload)
         if isinstance(data, dict):
+            event = data.get("event")
+            if event == "connect.challenge":
+                return "CONNECT_CHALLENGE"
             return str(data.get("result") or data.get("message") or data)
         return str(data)
     except Exception:
