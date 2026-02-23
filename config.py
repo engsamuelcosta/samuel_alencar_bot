@@ -5,3 +5,11 @@ load_dotenv()
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+GOOGLE_GENAI_API_KEY = os.getenv("GOOGLE_GENAI_API_KEY")
+
+# Estratégia de provedores:
+# 1) PRIMARY_AI_PROVIDER=codex_local (sem API)
+# 2) BACKUP_AI_PROVIDER=google_genai (usa API apenas no fallback)
+PRIMARY_AI_PROVIDER = os.getenv("PRIMARY_AI_PROVIDER", "codex_local")
+BACKUP_AI_PROVIDER = os.getenv("BACKUP_AI_PROVIDER", "google_genai")
+ALLOW_BACKUP_API = os.getenv("ALLOW_BACKUP_API", "false").lower() == "true"

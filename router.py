@@ -1,15 +1,14 @@
-KEYWORDS = {
-    "devops": ["deploy", "publicar", "infra", "docker", "cloud run", "ci", "cd", "pipeline"],
-    "qa": ["teste", "testar", "bug", "erro", "validar", "homolog", "regress"],
-    "developer": ["produto", "cliente", "feature", "funcionalidade", "api", "backend", "frontend", "refator"],
-}
-
-
 def route_agent(text: str) -> str:
-    normalized = (text or "").lower()
+    normalized = (text or "").lower().strip()
 
-    for agent, words in KEYWORDS.items():
-        if any(word in normalized for word in words):
-            return agent
+    # Modo atual: concentrado no Manager.
+    # Ele delega internamente para Developer + QA + DevOps
+    # e devolve um único relatório consolidado.
+    if normalized.startswith("/developer"):
+        return "developer"
+    if normalized.startswith("/qa"):
+        return "qa"
+    if normalized.startswith("/devops"):
+        return "devops"
 
     return "manager"
