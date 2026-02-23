@@ -1,3 +1,6 @@
+import google.generativeai as genai
+import os
+
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
 
@@ -8,6 +11,19 @@ from agents import manager, developer, qa, devops
 from services.speech_to_text import transcribe
 from services.text_to_speech import speak
 from services.team_logger import setup_logging, log_team
+
+
+fload_dotenv()
+genai.configure(api_key=os.getenv("GOOGLE_GENAI_API_KEY"))
+
+model = genai.GenerativeModel('gemini-1.5-flash')
+try:
+    response = model.generate_content("Olá, responda apenas: Conexão OK")
+    print(response.text)
+except Exception as e:
+    print(f"Erro na API: {e}")
+
+
 
 
 def execute(agent: str, text: str) -> str:
