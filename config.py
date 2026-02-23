@@ -6,6 +6,8 @@ load_dotenv()
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 GOOGLE_GENAI_API_KEY = os.getenv("GOOGLE_GENAI_API_KEY")
+CRONJOB_API_KEY = os.getenv("CRONJOB_API_KEY")
+CRONJOB_API_BASE = os.getenv("CRONJOB_API_BASE", "https://api.cron-job.org")
 
 # Estratégia de provedores:
 # 1) PRIMARY_AI_PROVIDER=codex_local (sem API)
