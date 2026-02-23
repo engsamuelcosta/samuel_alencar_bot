@@ -1,41 +1,40 @@
-import json
-from typing import Any
+import os
+import google.generativeai as genai
+from dotenv import load_dotenv
 
-import websocket
+# Carrega as chaves do .env
+load_dotenv()
 
-OPENCLAW_WS = "ws://127.0.0.1:18789"
+# Configuração do Google Gemini
+API_KEY = os.getenv("GOOGLE_GENAI_API_KEY")
+genai.configure(api_key=API_KEY)
 
-
-def _safe_parse(payload: str) -> str:
-    try:
-        data: Any = json.loads(payload)
-        if isinstance(data, dict):
-            event = data.get("event")
-            if event == "connect.challenge":
-                return "OPENCLAW_UNAUTH"
-            return str(data.get("result") or data.get("message") or data)
-        return str(data)
-    except Exception:
-        return payload
-
+# Usamos o modelo Flash por ser gratuito e extremamente rápido
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 def send_command(command: str) -> str:
+    """
+    Envia o comando diretamente para a API do Gemini.
+    Substitui a conexão WebSocket local para evitar erros de autenticação.
+    """
+    if not API_KEY:
+        return "Erro: GOOGLE_GENAI_API_KEY não encontrada no arquivo .env"
+
     try:
-        ws = websocket.create_connection(OPENCLAW_WS, timeout=20)
-
-        payload = {
-            "type": "command",
-            "command": command,
-        }
-
-        ws.send(json.dumps(payload, ensure_ascii=False))
-        result = ws.recv()
-        ws.close()
-
-        return _safe_parse(result)
+        # Chamada direta à API
+        response = model.generate_content(command)
+        
+        if response and response.text:
+            return response.text
+        
+        return "A IA retornou uma resposta vazia. Verifique o prompt ou os limites da conta."
 
     except Exception as exc:
-        return (
-            "Falha ao conectar no OpenClaw local (ws://127.0.0.1:18789). "
-            f"Erro: {exc}"
-        )
+        # Em caso de erro (rede, chave expirada, etc), retornamos 
+        # a string que seus agentes já tratam no fallback.
+        print(f"Erro na integração direta com Gemini: {exc}")
+        return f"CONNECT_CHALLENGE - Erro na API: {str(exc)}"
+
+# Função auxiliar para manter compatibilidade se necessário
+def _safe_parse(payload: str) -> str:
+    return payload
